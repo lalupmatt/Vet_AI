@@ -1,0 +1,382 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VetAI — Login</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --green-dark: #1a4731;
+        --green-mid: #2d6a4f;
+        --green-light: #52b788;
+        --amber: #e09f3e;
+        --cream: #f7f3ee;
+        --cream-dark: #ede7de;
+        --text-dark: #1c1c1c;
+        --text-muted: #6b7280;
+        --error: #c0392b;
+      }
+
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--cream);
+        min-height: 100vh;
+        display: flex;
+      }
+
+      /* ── Left Panel ── */
+      .left-panel {
+        flex: 1;
+        background: var(--green-dark);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-start;
+        padding: 60px 64px;
+        position: relative;
+        overflow: hidden;
+      }
+
+      .left-panel::before {
+        content: "";
+        position: absolute;
+        top: -80px;
+        right: -80px;
+        width: 340px;
+        height: 340px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.04);
+      }
+      .left-panel::after {
+        content: "";
+        position: absolute;
+        bottom: -60px;
+        left: -60px;
+        width: 260px;
+        height: 260px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.04);
+      }
+
+      .brand-logo {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+        margin-bottom: 56px;
+        z-index: 1;
+      }
+
+      .logo-icon {
+        width: 52px;
+        height: 52px;
+        background: var(--amber);
+        border-radius: 14px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 26px;
+      }
+
+      .brand-name {
+        font-family: "Crimson Text", serif;
+        font-size: 32px;
+        font-weight: 600;
+        color: #fff;
+        letter-spacing: -0.5px;
+      }
+
+      .hero-tagline {
+        font-family: "Crimson Text", serif;
+        font-size: 48px;
+        font-weight: 600;
+        color: #fff;
+        line-height: 1.15;
+        margin-bottom: 20px;
+        z-index: 1;
+      }
+
+      .hero-tagline em {
+        font-style: italic;
+        color: var(--amber);
+      }
+
+      .hero-sub {
+        color: rgba(255, 255, 255, 0.65);
+        font-size: 15px;
+        line-height: 1.7;
+        max-width: 380px;
+        z-index: 1;
+        margin-bottom: 48px;
+      }
+
+      .feature-pills {
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+        z-index: 1;
+      }
+
+      .pill {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: rgba(255, 255, 255, 0.8);
+        font-size: 14px;
+      }
+
+      .pill-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: var(--green-light);
+        flex-shrink: 0;
+      }
+
+      /* ── Right Panel ── */
+      .right-panel {
+        width: 480px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 60px 48px;
+        background: var(--cream);
+      }
+
+      .login-card {
+        width: 100%;
+        max-width: 380px;
+      }
+
+      .login-title {
+        font-family: "Crimson Text", serif;
+        font-size: 34px;
+        font-weight: 600;
+        color: var(--text-dark);
+        margin-bottom: 6px;
+      }
+
+      .login-subtitle {
+        color: var(--text-muted);
+        font-size: 14px;
+        margin-bottom: 36px;
+      }
+
+      .form-group {
+        margin-bottom: 20px;
+      }
+
+      label {
+        display: block;
+        font-size: 13px;
+        font-weight: 500;
+        color: var(--green-dark);
+        margin-bottom: 7px;
+        letter-spacing: 0.3px;
+      }
+
+      input[type="text"],
+      input[type="password"] {
+        width: 100%;
+        padding: 13px 16px;
+        border: 1.5px solid var(--cream-dark);
+        border-radius: 10px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 14px;
+        color: var(--text-dark);
+        background: #fff;
+        outline: none;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+      }
+
+      input[type="text"]:focus,
+      input[type="password"]:focus {
+        border-color: var(--green-mid);
+        box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.12);
+      }
+
+      .error-box {
+        background: #fdf2f2;
+        border: 1px solid #f5c6c6;
+        border-radius: 10px;
+        padding: 12px 16px;
+        color: var(--error);
+        font-size: 13.5px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      .btn-login {
+        width: 100%;
+        padding: 14px;
+        background: var(--green-dark);
+        color: #fff;
+        font-family: "DM Sans", sans-serif;
+        font-size: 15px;
+        font-weight: 500;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        transition:
+          background 0.2s,
+          transform 0.1s;
+        margin-top: 8px;
+      }
+
+      .btn-login:hover {
+        background: var(--green-mid);
+      }
+      .btn-login:active {
+        transform: scale(0.99);
+      }
+
+      .demo-hint {
+        margin-top: 28px;
+        padding: 16px;
+        background: rgba(26, 71, 49, 0.06);
+        border-radius: 10px;
+        border-left: 3px solid var(--green-light);
+      }
+
+      .demo-hint h4 {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--green-dark);
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        margin-bottom: 10px;
+      }
+
+      .demo-row {
+        display: flex;
+        justify-content: space-between;
+        font-size: 12.5px;
+        color: var(--text-muted);
+        padding: 3px 0;
+      }
+
+      .demo-row strong {
+        color: var(--text-dark);
+        font-weight: 500;
+      }
+
+      .role-badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 20px;
+        font-size: 11px;
+        font-weight: 600;
+      }
+      .badge-admin {
+        background: #fff3cd;
+        color: #856404;
+      }
+      .badge-user {
+        background: #d4edda;
+        color: #155724;
+      }
+
+      @media (max-width: 860px) {
+        .left-panel {
+          display: none;
+        }
+        .right-panel {
+          width: 100%;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ── Left Hero Panel ── -->
+    <div class="left-panel">
+      <div class="brand-logo">
+        <div class="logo-icon">🐾</div>
+        <span class="brand-name">VetAI</span>
+      </div>
+
+      <h1 class="hero-tagline">Smart Care for<br /><em>Every Animal</em></h1>
+      <p class="hero-sub">
+        AI-powered veterinary diagnostics and health monitoring. Identify
+        animals, track medical history, and get instant insights.
+      </p>
+
+      <div class="feature-pills">
+        <div class="pill">
+          <span class="pill-dot"></span> AI-based animal identification
+        </div>
+        <div class="pill">
+          <span class="pill-dot"></span> Real-time health diagnosis
+        </div>
+        <div class="pill">
+          <span class="pill-dot"></span> Medical history tracking
+        </div>
+        <div class="pill">
+          <span class="pill-dot"></span> Vaccination schedule alerts
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Right Login Panel ── -->
+    <div class="right-panel">
+      <div class="login-card">
+        <h2 class="login-title">Welcome back</h2>
+        <p class="login-subtitle">Sign in to access your dashboard</p>
+
+        {% if error %}
+        <div class="error-box"><span>⚠️</span> {{ error }}</div>
+        {% endif %}
+
+        <form method="POST" action="/login">
+          <div class="form-group">
+            <label for="user_id">User ID</label>
+            <input
+              type="text"
+              id="user_id"
+              name="user_id"
+              placeholder="e.g. admin1 or user1"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input
+              type="password"
+              id="password"
+              name="password"
+              placeholder="Enter password"
+              required
+            />
+          </div>
+          <button type="submit" class="btn-login">Sign In →</button>
+        </form>
+
+        <div class="demo-hint">
+          <h4>Demo Credentials</h4>
+          <div class="demo-row">
+            <span><strong>admin1</strong> / admin123</span>
+            <span class="role-badge badge-admin">Admin</span>
+          </div>
+          <div class="demo-row">
+            <span><strong>user1</strong> / user123</span>
+            <span class="role-badge badge-user">User</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>

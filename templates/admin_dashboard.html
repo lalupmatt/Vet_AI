@@ -1,0 +1,1674 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VetAI — Admin Dashboard</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --green-dark: #1a4731;
+        --green-mid: #2d6a4f;
+        --green-light: #52b788;
+        --amber: #e09f3e;
+        --amber-light: #fdf3dc;
+        --cream: #f7f3ee;
+        --cream-dark: #ede7de;
+        --white: #ffffff;
+        --text-dark: #1c1c1c;
+        --text-muted: #6b7280;
+        --red: #c0392b;
+        --red-light: #fdf2f2;
+        --sidebar-w: 240px;
+      }
+
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--cream);
+        color: var(--text-dark);
+        min-height: 100vh;
+        display: flex;
+      }
+
+      /* ── Sidebar ── */
+      .sidebar {
+        width: var(--sidebar-w);
+        background: var(--green-dark);
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        z-index: 100;
+        padding: 0;
+      }
+
+      .sidebar-brand {
+        padding: 24px 24px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .sidebar-brand .logo {
+        font-size: 24px;
+      }
+      .sidebar-brand .brand-text {
+        font-family: "Crimson Text", serif;
+        color: #fff;
+        font-size: 22px;
+        font-weight: 600;
+      }
+
+      .sidebar-nav {
+        flex: 1;
+        padding: 20px 0;
+      }
+
+      .nav-section-label {
+        padding: 10px 24px 6px;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        color: rgba(255, 255, 255, 0.35);
+        text-transform: uppercase;
+      }
+
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 11px 24px;
+        color: rgba(255, 255, 255, 0.7);
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 400;
+        transition: all 0.15s;
+        border-left: 3px solid transparent;
+      }
+
+      .nav-item:hover {
+        background: rgba(255, 255, 255, 0.06);
+        color: #fff;
+      }
+      .nav-item.active {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        border-left-color: var(--amber);
+      }
+      .nav-item .nav-icon {
+        font-size: 16px;
+        width: 20px;
+        text-align: center;
+      }
+
+      .sidebar-footer {
+        padding: 16px 24px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+      .user-avatar {
+        width: 34px;
+        height: 34px;
+        background: var(--amber);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--green-dark);
+      }
+      .user-details .user-name {
+        color: #fff;
+        font-size: 13px;
+        font-weight: 500;
+      }
+      .user-details .role-tag {
+        display: inline-block;
+        background: var(--amber);
+        color: var(--green-dark);
+        font-size: 10px;
+        font-weight: 700;
+        padding: 1px 7px;
+        border-radius: 20px;
+        margin-top: 2px;
+      }
+
+      .btn-logout {
+        width: 100%;
+        padding: 9px;
+        background: rgba(255, 255, 255, 0.08);
+        color: rgba(255, 255, 255, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 8px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        cursor: pointer;
+        transition: all 0.15s;
+        text-align: center;
+      }
+      .btn-logout:hover {
+        background: rgba(255, 255, 255, 0.15);
+        color: #fff;
+      }
+
+      /* ── Main Content ── */
+      .main {
+        margin-left: var(--sidebar-w);
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      .topbar {
+        background: var(--white);
+        padding: 16px 32px;
+        border-bottom: 1px solid var(--cream-dark);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .topbar-title {
+        font-family: "Crimson Text", serif;
+        font-size: 22px;
+        font-weight: 600;
+        color: var(--text-dark);
+      }
+      .topbar-badge {
+        background: var(--amber-light);
+        color: #856404;
+        font-size: 12px;
+        font-weight: 600;
+        padding: 4px 12px;
+        border-radius: 20px;
+        border: 1px solid #f0d060;
+      }
+
+      .content {
+        padding: 28px 32px;
+        flex: 1;
+      }
+
+      /* ── Tabs ── */
+      .tabs {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 24px;
+        background: var(--white);
+        padding: 6px;
+        border-radius: 12px;
+        width: fit-content;
+        border: 1px solid var(--cream-dark);
+      }
+
+      .tab {
+        padding: 9px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-muted);
+        transition: all 0.15s;
+        border: none;
+        background: none;
+        font-family: "DM Sans", sans-serif;
+      }
+      .tab:hover {
+        color: var(--text-dark);
+      }
+      .tab.active {
+        background: var(--green-dark);
+        color: #fff;
+      }
+
+      /* ── Tab Panels ── */
+      .tab-panel {
+        display: none;
+      }
+      .tab-panel.active {
+        display: block;
+      }
+
+      /* ── Animal Table ── */
+      .card {
+        background: var(--white);
+        border-radius: 14px;
+        border: 1px solid var(--cream-dark);
+        overflow: hidden;
+      }
+
+      .card-header {
+        padding: 18px 24px;
+        border-bottom: 1px solid var(--cream-dark);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .card-title {
+        font-size: 15px;
+        font-weight: 600;
+        color: var(--text-dark);
+      }
+
+      .stat-row {
+        display: flex;
+        gap: 14px;
+        margin-bottom: 24px;
+      }
+
+      .stat-card {
+        background: var(--white);
+        border: 1px solid var(--cream-dark);
+        border-radius: 12px;
+        padding: 18px 22px;
+        flex: 1;
+      }
+
+      .stat-num {
+        font-size: 28px;
+        font-weight: 600;
+        color: var(--green-dark);
+        font-family: "Crimson Text", serif;
+      }
+      .stat-label {
+        font-size: 12px;
+        color: var(--text-muted);
+        margin-top: 4px;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+      }
+      th {
+        text-align: left;
+        padding: 12px 16px;
+        font-size: 11px;
+        font-weight: 600;
+        letter-spacing: 0.6px;
+        text-transform: uppercase;
+        color: var(--text-muted);
+        background: #fbfaf8;
+      }
+      td {
+        padding: 13px 16px;
+        font-size: 13.5px;
+        border-top: 1px solid var(--cream-dark);
+        vertical-align: middle;
+      }
+      tr:hover td {
+        background: #fafaf8;
+      }
+
+      .health-badge {
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 11.5px;
+        font-weight: 600;
+      }
+      .badge-healthy {
+        background: #d4edda;
+        color: #155724;
+      }
+      .badge-attention {
+        background: #fff3cd;
+        color: #856404;
+      }
+      .badge-risk {
+        background: #f8d7da;
+        color: #721c24;
+      }
+
+      .vacc-badge {
+        display: inline-block;
+        padding: 3px 10px;
+        border-radius: 20px;
+        font-size: 11.5px;
+        font-weight: 500;
+      }
+      .vacc-done {
+        background: #d4edda;
+        color: #155724;
+      }
+      .vacc-due {
+        background: #fff3cd;
+        color: #856404;
+      }
+
+      .action-btns {
+        display: flex;
+        gap: 6px;
+      }
+
+      .btn-edit {
+        padding: 6px 14px;
+        background: var(--amber-light);
+        color: #8a6200;
+        border: 1px solid #f0d060;
+        border-radius: 7px;
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        font-family: "DM Sans", sans-serif;
+        transition: all 0.15s;
+      }
+      .btn-edit:hover {
+        background: #fde99c;
+      }
+
+      .btn-delete {
+        padding: 6px 14px;
+        background: var(--red-light);
+        color: var(--red);
+        border: 1px solid #f5c6c6;
+        border-radius: 7px;
+        font-size: 12px;
+        font-weight: 500;
+        cursor: pointer;
+        font-family: "DM Sans", sans-serif;
+        transition: all 0.15s;
+      }
+      .btn-delete:hover {
+        background: #fce8e8;
+      }
+
+      /* ── Forms ── */
+      .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+        padding: 24px;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .form-group.full-width {
+        grid-column: 1 / -1;
+      }
+
+      label {
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--green-dark);
+        letter-spacing: 0.3px;
+      }
+
+      input,
+      select,
+      textarea {
+        padding: 11px 14px;
+        border: 1.5px solid var(--cream-dark);
+        border-radius: 9px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13.5px;
+        color: var(--text-dark);
+        background: #fff;
+        outline: none;
+        transition:
+          border-color 0.2s,
+          box-shadow 0.2s;
+      }
+
+      input:focus,
+      select:focus,
+      textarea:focus {
+        border-color: var(--green-mid);
+        box-shadow: 0 0 0 3px rgba(45, 106, 79, 0.1);
+      }
+
+      textarea {
+        resize: vertical;
+        min-height: 80px;
+      }
+
+      .form-footer {
+        padding: 0 24px 24px;
+        display: flex;
+        gap: 10px;
+      }
+
+      .btn-primary {
+        padding: 12px 24px;
+        background: var(--green-dark);
+        color: #fff;
+        border: none;
+        border-radius: 9px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+      .btn-primary:hover {
+        background: var(--green-mid);
+      }
+
+      /* ── Scan Panel ── */
+      .scan-layout {
+        display: grid;
+        grid-template-columns: 1fr 1.2fr;
+        gap: 20px;
+      }
+
+      .upload-zone {
+        border: 2px dashed var(--cream-dark);
+        border-radius: 14px;
+        padding: 40px 24px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        background: var(--white);
+      }
+      .upload-zone:hover {
+        border-color: var(--green-light);
+        background: #f0fdf4;
+      }
+      .upload-zone .upload-icon {
+        font-size: 40px;
+        margin-bottom: 12px;
+      }
+      .upload-zone p {
+        color: var(--text-muted);
+        font-size: 14px;
+      }
+      .upload-zone p strong {
+        color: var(--green-dark);
+      }
+
+      #scan-file-input {
+        display: none;
+      }
+
+      .preview-img {
+        max-width: 100%;
+        max-height: 200px;
+        border-radius: 10px;
+        object-fit: cover;
+        margin-top: 12px;
+      }
+
+      .btn-scan {
+        width: 100%;
+        padding: 13px;
+        background: var(--green-dark);
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 15px;
+        font-weight: 500;
+        cursor: pointer;
+        margin-top: 16px;
+        transition: background 0.15s;
+      }
+      .btn-scan:hover {
+        background: var(--green-mid);
+      }
+      .btn-scan:disabled {
+        background: #aaa;
+        cursor: not-allowed;
+      }
+
+      /* ── Result Panel ── */
+      .result-panel {
+        background: var(--white);
+        border-radius: 14px;
+        border: 1px solid var(--cream-dark);
+        padding: 24px;
+      }
+
+      .result-animal-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-bottom: 18px;
+      }
+
+      .result-name {
+        font-family: "Crimson Text", serif;
+        font-size: 26px;
+        font-weight: 600;
+      }
+      .result-species {
+        color: var(--text-muted);
+        font-size: 13px;
+        margin-top: 2px;
+      }
+
+      .score-circle {
+        text-align: center;
+        min-width: 70px;
+      }
+      .score-num {
+        font-size: 28px;
+        font-weight: 700;
+        color: var(--green-dark);
+        font-family: "Crimson Text", serif;
+      }
+      .score-label {
+        font-size: 11px;
+        color: var(--text-muted);
+      }
+
+      .detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 16px;
+      }
+      .detail-item {
+        background: var(--cream);
+        border-radius: 8px;
+        padding: 10px 14px;
+      }
+      .detail-label {
+        font-size: 10px;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+      }
+      .detail-value {
+        font-size: 13.5px;
+        font-weight: 500;
+        margin-top: 3px;
+      }
+
+      .section-label {
+        font-size: 13px;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        color: var(--green-dark);
+        margin: 18px 0 10px;
+      }
+
+      .diagnosis-box {
+        background: #f0fdf4;
+        border: 1px solid #a7d9b5;
+        border-radius: 12px;
+        padding: 18px 20px;
+        font-size: 15px;
+        line-height: 1.8;
+        color: var(--text-dark);
+        max-height: 260px;
+        min-height: 220px;
+        overflow-y: auto;
+      }
+
+      .diagnosis-box strong {
+        font-weight: 700;
+        color: var(--text-dark);
+      }
+
+      .diagnosis-box ul {
+        margin: 10px 0 0 20px;
+        padding-left: 10px;
+      }
+
+      .diagnosis-box li {
+        margin-bottom: 10px;
+      }
+
+      .placeholder-msg {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        min-height: 200px;
+        color: var(--text-muted);
+        text-align: center;
+        gap: 10px;
+      }
+
+      .placeholder-msg .ph-icon {
+        font-size: 40px;
+        opacity: 0.4;
+      }
+
+      /* ── Spinner ── */
+      .spinner {
+        display: none;
+        width: 22px;
+        height: 22px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        margin: 0 auto;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* ── Toast ── */
+      #toast {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        padding: 14px 20px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 500;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        z-index: 9999;
+        transform: translateY(60px);
+        opacity: 0;
+        transition: all 0.3s;
+      }
+      #toast.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      #toast.success {
+        background: var(--green-dark);
+        color: #fff;
+      }
+      #toast.error {
+        background: var(--red);
+        color: #fff;
+      }
+
+      /* ── Modal ── */
+      .modal-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        z-index: 500;
+        align-items: center;
+        justify-content: center;
+      }
+      .modal-overlay.open {
+        display: flex;
+      }
+
+      .modal {
+        background: var(--white);
+        border-radius: 16px;
+        width: 560px;
+        max-width: 95vw;
+        max-height: 88vh;
+        overflow-y: auto;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.2);
+      }
+
+      .modal-header {
+        padding: 22px 28px 18px;
+        border-bottom: 1px solid var(--cream-dark);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+
+      .modal-title {
+        font-family: "Crimson Text", serif;
+        font-size: 22px;
+        font-weight: 600;
+      }
+
+      .btn-close {
+        width: 30px;
+        height: 30px;
+        background: var(--cream);
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        font-size: 16px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.15s;
+      }
+      .btn-close:hover {
+        background: var(--cream-dark);
+      }
+
+      .chat-box {
+        background: var(--white);
+        border: 1px solid var(--cream-dark);
+        border-radius: 14px;
+        overflow: hidden;
+      }
+
+      .chat-messages {
+        height: 280px;
+        overflow-y: auto;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .msg {
+        max-width: 80%;
+      }
+      .msg-user {
+        align-self: flex-end;
+      }
+      .msg-bot {
+        align-self: flex-start;
+      }
+
+      .msg-bubble {
+        padding: 10px 14px;
+        border-radius: 12px;
+        font-size: 13.5px;
+        line-height: 1.5;
+        white-space: pre-wrap;
+      }
+
+      .msg-user .msg-bubble {
+        background: var(--green-dark);
+        color: #fff;
+        border-bottom-right-radius: 4px;
+      }
+      .msg-bot .msg-bubble {
+        background: var(--cream);
+        color: var(--text-dark);
+        border-bottom-left-radius: 4px;
+      }
+
+      .chat-input-row {
+        display: flex;
+        gap: 10px;
+        padding: 14px 16px;
+        border-top: 1px solid var(--cream-dark);
+      }
+
+      .chat-input-row input {
+        flex: 1;
+        padding: 10px 14px;
+        border: 1.5px solid var(--cream-dark);
+        border-radius: 9px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13.5px;
+        outline: none;
+      }
+
+      .chat-input-row input:focus {
+        border-color: var(--green-mid);
+      }
+
+      .btn-send {
+        padding: 10px 18px;
+        background: var(--green-dark);
+        color: #fff;
+        border: none;
+        border-radius: 9px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+      .btn-send:hover {
+        background: var(--green-mid);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ── Sidebar ── -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <span class="logo">🐾</span>
+        <span class="brand-text">VetAI</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">Management</div>
+        <div class="nav-item active" onclick="switchTab('records')">
+          <span class="nav-icon">📋</span> Animal Records
+        </div>
+        <div class="nav-item" onclick="switchTab('scan')">
+          <span class="nav-icon">🔍</span> Scan Animal
+        </div>
+        <div class="nav-item" onclick="switchTab('add')">
+          <span class="nav-icon">➕</span> Add New Animal
+        </div>
+        <div class="nav-section-label" style="margin-top: 12px">Assistant</div>
+        <div class="nav-item" onclick="switchTab('chat')">
+          <span class="nav-icon">💬</span> AI Chat
+        </div>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div class="user-info">
+          <div class="user-avatar">{{ user.name[0] | upper }}</div>
+          <div class="user-details">
+            <div class="user-name">{{ user.name }}</div>
+            <span class="role-tag">ADMIN</span>
+          </div>
+        </div>
+        <button class="btn-logout" onclick="location.href = '/logout'">
+          Sign Out
+        </button>
+      </div>
+    </aside>
+
+    <!-- ── Main ── -->
+    <main class="main">
+      <div class="topbar">
+        <span class="topbar-title" id="page-title">Animal Records</span>
+        <span class="topbar-badge">⚙️ Admin Panel</span>
+      </div>
+
+      <div class="content">
+        <!-- Tab Selector -->
+        <div class="tabs">
+          <button
+            class="tab active"
+            id="tab-records"
+            onclick="switchTab('records')"
+          >
+            📋 Records
+          </button>
+          <button class="tab" id="tab-scan" onclick="switchTab('scan')">
+            🔍 Scan
+          </button>
+          <button class="tab" id="tab-add" onclick="switchTab('add')">
+            ➕ Add Animal
+          </button>
+          <button class="tab" id="tab-chat" onclick="switchTab('chat')">
+            💬 AI Chat
+          </button>
+        </div>
+
+        <!-- ════ TAB: RECORDS ════ -->
+        <div class="tab-panel active" id="panel-records">
+          <div class="stat-row">
+            <div class="stat-card">
+              <div class="stat-num">{{ animals | length }}</div>
+              <div class="stat-label">Total Animals</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-num">
+                {{ animals | selectattr('health','equalto','Healthy') | list |
+                length }}
+              </div>
+              <div class="stat-label">Healthy</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-num">
+                {{ animals | rejectattr('vaccination','equalto','Completed') |
+                list | length }}
+              </div>
+              <div class="stat-label">Vaccination Due</div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">All Animal Records</span>
+            </div>
+            <table>
+              <thead>
+                <tr>
+                  <th>Tag ID</th>
+                  <th>Name</th>
+                  <th>Species</th>
+                  <th>Owner</th>
+                  <th>Health</th>
+                  <th>Vaccination</th>
+                  <th>Next Checkup</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for a in animals %}
+                <tr>
+                  <td>
+                    <code
+                      style="
+                        background: #f3f4f6;
+                        padding: 2px 7px;
+                        border-radius: 5px;
+                        font-size: 12px;
+                      "
+                      >{{ a.tag_id }}</code
+                    >
+                  </td>
+                  <td><strong>{{ a.name }}</strong></td>
+                  <td>{{ a.species }}</td>
+                  <td>{{ a.owner }}</td>
+                  <td>
+                    <span
+                      class="health-badge {% if 'Healthy' in a.health %}badge-healthy{% elif 'risk' in a.health|lower %}badge-risk{% else %}badge-attention{% endif %}"
+                    >
+                      {{ a.health }}
+                    </span>
+                  </td>
+                  <td>
+                    <span
+                      class="vacc-badge {% if a.vaccination == 'Completed' %}vacc-done{% else %}vacc-due{% endif %}"
+                    >
+                      {{ a.vaccination }}
+                    </span>
+                  </td>
+                  <td>{{ a.next_checkup or '—' }}</td>
+                  <td>
+                    <div class="action-btns">
+                      <button
+                        class="btn-edit"
+                        onclick="openEditModal('{{ a.tag_id }}')"
+                      >
+                        Edit
+                      </button>
+                      <button
+                        class="btn-delete"
+                        onclick="deleteAnimal('{{ a.tag_id }}', '{{ a.name }}')"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </td>
+                </tr>
+                {% else %}
+                <tr>
+                  <td
+                    colspan="8"
+                    style="
+                      text-align: center;
+                      color: var(--text-muted);
+                      padding: 32px;
+                    "
+                  >
+                    No animals found. Add one →
+                  </td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- ════ TAB: SCAN ════ -->
+        <div class="tab-panel" id="panel-scan">
+          <div class="scan-layout">
+            <div>
+              <div
+                class="upload-zone"
+                id="drop-zone"
+                onclick="document.getElementById('scan-file-input').click()"
+              >
+                <div class="upload-icon">📷</div>
+                <p><strong>Click to upload</strong> or drag & drop</p>
+                <p>PNG, JPG, JPEG, WEBP supported</p>
+                <img
+                  id="scan-preview"
+                  class="preview-img"
+                  style="display: none"
+                />
+              </div>
+              <input
+                type="file"
+                id="scan-file-input"
+                accept=".png,.jpg,.jpeg,.bmp,.webp"
+                onchange="previewScan(this)"
+              />
+              <button
+                class="btn-scan"
+                id="btn-scan-submit"
+                onclick="doScan()"
+                disabled
+              >
+                <span id="scan-btn-text">🔍 Identify & Diagnose</span>
+                <div class="spinner" id="scan-spinner"></div>
+              </button>
+            </div>
+
+            <div class="result-panel" id="scan-result-panel">
+              <div class="placeholder-msg" id="scan-placeholder">
+                <div class="ph-icon">🐄</div>
+                <p>Upload an animal photo to<br />get AI diagnosis results</p>
+              </div>
+              <div id="scan-result-content" style="display: none">
+                <div class="result-animal-header">
+                  <div>
+                    <div class="result-name" id="r-name">—</div>
+                    <div class="result-species" id="r-species">—</div>
+                  </div>
+                  <div class="score-circle">
+                    <div class="score-num" id="r-score">—</div>
+                    <div class="score-label">Health Score</div>
+                  </div>
+                </div>
+                <div class="detail-grid">
+                  <div class="detail-item">
+                    <div class="detail-label">Tag ID</div>
+                    <div class="detail-value" id="r-tag">—</div>
+                  </div>
+                  <div class="detail-item">
+                    <div class="detail-label">Owner</div>
+                    <div class="detail-value" id="r-owner">—</div>
+                  </div>
+                  <div class="detail-item">
+                    <div class="detail-label">Age</div>
+                    <div class="detail-value" id="r-age">—</div>
+                  </div>
+                  <div class="detail-item">
+                    <div class="detail-label">Vaccination</div>
+                    <div class="detail-value" id="r-vacc">—</div>
+                  </div>
+                </div>
+                <div class="section-label">AI Diagnosis</div>
+                <div class="diagnosis-box" id="r-diagnosis">—</div>
+                <div class="section-label">Health Summary</div>
+                <div class="diagnosis-box" id="r-summary">—</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════ TAB: ADD ANIMAL ════ -->
+        <div class="tab-panel" id="panel-add">
+          <div class="card">
+            <div class="card-header">
+              <span class="card-title">Register New Animal</span>
+            </div>
+            <form id="add-animal-form" onsubmit="submitAddAnimal(event)">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label>Tag ID *</label>
+                  <input
+                    type="text"
+                    name="tag_id"
+                    placeholder="e.g. COW-003"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label>Animal Name *</label>
+                  <input
+                    type="text"
+                    name="name"
+                    placeholder="e.g. Ganga"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label>Species *</label>
+                  <select name="species" required>
+                    <option value="">Select species</option>
+                    <option>Cow</option>
+                    <option>Goat</option>
+                    <option>Horse</option>
+                    <option>Dog</option>
+                    <option>Cat</option>
+                    <option>Sheep</option>
+                    <option>Pig</option>
+                    <option>Other</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Owner Name *</label>
+                  <input
+                    type="text"
+                    name="owner"
+                    placeholder="e.g. Ramesh Kumar"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label>Age</label>
+                  <input type="text" name="age" placeholder="e.g. 3 years" />
+                </div>
+                <div class="form-group">
+                  <label>Weight</label>
+                  <input type="text" name="weight" placeholder="e.g. 250 kg" />
+                </div>
+                <div class="form-group">
+                  <label>Location</label>
+                  <input
+                    type="text"
+                    name="location"
+                    placeholder="e.g. Mysore"
+                  />
+                </div>
+                <div class="form-group">
+                  <label>Vaccination Status</label>
+                  <select name="vaccination">
+                    <option value="Completed">Completed</option>
+                    <option value="Due in 7 days">Due in 7 days</option>
+                    <option value="Due in 10 days">Due in 10 days</option>
+                    <option value="Not done">Not done</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Health Status</label>
+                  <input type="text" name="health" value="Healthy" />
+                </div>
+                <div class="form-group">
+                  <label>Next Checkup Date</label>
+                  <input type="date" name="next_checkup" />
+                </div>
+                <div class="form-group full-width">
+                  <label>Medical History (comma-separated)</label>
+                  <textarea
+                    name="medical_history"
+                    placeholder="e.g. Deworming (Jan 2025), Vaccination (Feb 2025)"
+                  ></textarea>
+                </div>
+                <div class="form-group full-width">
+                  <label>Notes</label>
+                  <textarea
+                    name="notes"
+                    placeholder="Any additional notes..."
+                  ></textarea>
+                </div>
+                <div class="form-group full-width">
+                  <label
+                    >Animal Photo * (saved to dataset for future
+                    recognition)</label
+                  >
+                  <input
+                    type="file"
+                    name="image"
+                    id="add-img"
+                    accept=".png,.jpg,.jpeg,.bmp,.webp"
+                    required
+                  />
+                </div>
+              </div>
+              <div class="form-footer">
+                <button type="submit" class="btn-primary">
+                  💾 Save Animal Record
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- ════ TAB: CHAT ════ -->
+        <div class="tab-panel" id="panel-chat">
+          <div class="chat-box">
+            <div class="card-header">
+              <span class="card-title">🤖 VetAI Assistant</span>
+              <span style="font-size: 12px; color: var(--text-muted)"
+                >Powered by LLaMA 3</span
+              >
+            </div>
+            <div class="chat-messages" id="chat-messages">
+              <div class="msg msg-bot">
+                <div class="msg-bubble">
+                  Hello Dr. {{ user.name }}! 👋 I'm your veterinary assistant.
+                  Ask me anything about animal health, treatment, or diagnosis.
+                </div>
+              </div>
+            </div>
+            <div class="chat-input-row">
+              <input
+                type="text"
+                id="chat-input"
+                placeholder="Ask about animal health, treatment, symptoms..."
+                onkeydown="if (event.key === 'Enter') sendChat();"
+              />
+              <button class="btn-send" onclick="sendChat()">Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- ══ Edit Modal ══ -->
+    <div class="modal-overlay" id="edit-modal">
+      <div class="modal">
+        <div class="modal-header">
+          <span class="modal-title">Edit Animal Record</span>
+          <button class="btn-close" onclick="closeEditModal()">✕</button>
+        </div>
+        <div class="form-grid" id="edit-form-fields">
+          <input type="hidden" id="edit-tag-id" />
+          <div class="form-group">
+            <label>Name</label>
+            <input type="text" id="edit-name" />
+          </div>
+          <div class="form-group">
+            <label>Species</label>
+            <input type="text" id="edit-species" />
+          </div>
+          <div class="form-group">
+            <label>Owner</label>
+            <input type="text" id="edit-owner" />
+          </div>
+          <div class="form-group">
+            <label>Age</label>
+            <input type="text" id="edit-age" />
+          </div>
+          <div class="form-group">
+            <label>Weight</label>
+            <input type="text" id="edit-weight" />
+          </div>
+          <div class="form-group">
+            <label>Location</label>
+            <input type="text" id="edit-location" />
+          </div>
+          <div class="form-group">
+            <label>Vaccination</label>
+            <input type="text" id="edit-vaccination" />
+          </div>
+          <div class="form-group">
+            <label>Health Status</label>
+            <input type="text" id="edit-health" />
+          </div>
+          <div class="form-group">
+            <label>Next Checkup</label>
+            <input type="date" id="edit-next-checkup" />
+          </div>
+          <div class="form-group">
+            <label>Notes</label>
+            <input type="text" id="edit-notes" />
+          </div>
+          <div class="form-group full-width">
+            <label>Medical History (comma-separated)</label>
+            <textarea id="edit-medical-history"></textarea>
+          </div>
+        </div>
+        <div class="form-footer">
+          <button class="btn-primary" onclick="saveEdit()">
+            💾 Save Changes
+          </button>
+          <button
+            onclick="closeEditModal()"
+            style="
+              padding: 12px 20px;
+              border: 1.5px solid var(--cream-dark);
+              border-radius: 9px;
+              background: #fff;
+              cursor: pointer;
+              font-family: &quot;DM Sans&quot;, sans-serif;
+            "
+          >
+            Cancel
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="toast"></div>
+
+    <script>
+      // ── Tab Switching ──
+      const tabTitles = {
+        records: "Animal Records",
+        scan: "Scan Animal",
+        add: "Add New Animal",
+        chat: "AI Chat",
+      };
+
+      function switchTab(name) {
+        document
+          .querySelectorAll(".tab-panel")
+          .forEach((p) => p.classList.remove("active"));
+        document
+          .querySelectorAll(".tab")
+          .forEach((t) => t.classList.remove("active"));
+        document
+          .querySelectorAll(".nav-item")
+          .forEach((n) => n.classList.remove("active"));
+        document.getElementById("panel-" + name).classList.add("active");
+        document.getElementById("tab-" + name).classList.add("active");
+        document.getElementById("page-title").textContent = tabTitles[name];
+
+        document.querySelectorAll(".nav-item").forEach((n) => {
+          if (
+            n.getAttribute("onclick") &&
+            n.getAttribute("onclick").includes(name)
+          ) {
+            n.classList.add("active");
+          }
+        });
+      }
+
+      // ── Toast ──
+      function showToast(msg, type = "success") {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.className = "show " + type;
+        setTimeout(() => {
+          t.className = "";
+        }, 3200);
+      }
+
+      // ── Markdown-like formatter for AI text ──
+      function formatMarkdownText(text) {
+        if (!text) return "—";
+
+        let html = text;
+
+        // Escape unsafe HTML
+        html = html
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;");
+
+        // Convert **bold** to <strong>
+        html = html.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>");
+
+        // Split lines
+        const lines = html.split("\n");
+        let formatted = "";
+        let inList = false;
+
+        lines.forEach((line) => {
+          const trimmed = line.trim();
+
+          if (trimmed.startsWith("- ") || trimmed.startsWith("• ")) {
+            if (!inList) {
+              formatted += "<ul>";
+              inList = true;
+            }
+            formatted += `<li>${trimmed.substring(2)}</li>`;
+          } else {
+            if (inList) {
+              formatted += "</ul>";
+              inList = false;
+            }
+
+            if (trimmed === "") {
+              formatted += "<br>";
+            } else {
+              formatted += `<div>${trimmed}</div>`;
+            }
+          }
+        });
+
+        if (inList) formatted += "</ul>";
+
+        return formatted;
+      }
+
+      // ── Scan ──
+      let scanFile = null;
+
+      function previewScan(input) {
+        const file = input.files[0];
+        if (!file) return;
+        scanFile = file;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = document.getElementById("scan-preview");
+          img.src = e.target.result;
+          img.style.display = "block";
+        };
+        reader.readAsDataURL(file);
+        document.getElementById("btn-scan-submit").disabled = false;
+      }
+
+      async function doScan() {
+        if (!scanFile) return;
+        const btn = document.getElementById("btn-scan-submit");
+        const spinner = document.getElementById("scan-spinner");
+        const btnText = document.getElementById("scan-btn-text");
+
+        btn.disabled = true;
+        btnText.style.display = "none";
+        spinner.style.display = "block";
+
+        const fd = new FormData();
+        fd.append("file", scanFile);
+
+        try {
+          const res = await fetch("/admin/scan", { method: "POST", body: fd });
+          const data = await res.json();
+
+          if (data.error) {
+            showToast(data.error, "error");
+          } else {
+            displayScanResult(data);
+          }
+        } catch (e) {
+          showToast("Scan failed: " + e.message, "error");
+        } finally {
+          btn.disabled = false;
+          btnText.style.display = "inline";
+          spinner.style.display = "none";
+        }
+      }
+
+      function displayScanResult(data) {
+        document.getElementById("scan-placeholder").style.display = "none";
+        document.getElementById("scan-result-content").style.display = "block";
+
+        const a = data.animal || {};
+        const report = data.report || {};
+
+        document.getElementById("r-name").textContent = a.name || "—";
+        document.getElementById("r-species").textContent =
+          (a.species || "—") + " · " + (a.location || "Unknown");
+        document.getElementById("r-tag").textContent = a.tag_id || "—";
+        document.getElementById("r-owner").textContent = a.owner || "—";
+        document.getElementById("r-age").textContent = a.age || "—";
+        document.getElementById("r-vacc").textContent = a.vaccination || "—";
+        document.getElementById("r-score").textContent =
+          report.health_score || "—";
+
+        // IMPORTANT: use innerHTML instead of textContent
+        document.getElementById("r-diagnosis").innerHTML = formatMarkdownText(
+          data.diagnosis || "—",
+        );
+
+        document.getElementById("r-summary").innerHTML = formatMarkdownText(
+          report.summary || "—",
+        );
+      }
+
+      // Drag and drop
+      const dz = document.getElementById("drop-zone");
+      dz.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        dz.style.borderColor = "var(--green-light)";
+      });
+      dz.addEventListener("dragleave", () => {
+        dz.style.borderColor = "";
+      });
+      dz.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dz.style.borderColor = "";
+        const file = e.dataTransfer.files[0];
+        if (file) {
+          scanFile = file;
+          const reader = new FileReader();
+          reader.onload = (ev) => {
+            const img = document.getElementById("scan-preview");
+            img.src = ev.target.result;
+            img.style.display = "block";
+          };
+          reader.readAsDataURL(file);
+          document.getElementById("btn-scan-submit").disabled = false;
+        }
+      });
+
+      // ── Add Animal ──
+      async function submitAddAnimal(e) {
+        e.preventDefault();
+        const form = document.getElementById("add-animal-form");
+        const fd = new FormData(form);
+
+        try {
+          const res = await fetch("/admin/add_animal", {
+            method: "POST",
+            body: fd,
+          });
+          const data = await res.json();
+          if (data.status === "success") {
+            showToast("Animal added! Refreshing records...", "success");
+            form.reset();
+            setTimeout(() => location.reload(), 1500);
+          } else {
+            showToast(data.message, "error");
+          }
+        } catch (err) {
+          showToast("Error: " + err.message, "error");
+        }
+      }
+
+      // ── Edit Modal ──
+      async function openEditModal(tagId) {
+        try {
+          const res = await fetch("/admin/get_animal/" + tagId);
+          const a = await res.json();
+
+          document.getElementById("edit-tag-id").value = a.tag_id || "";
+          document.getElementById("edit-name").value = a.name || "";
+          document.getElementById("edit-species").value = a.species || "";
+          document.getElementById("edit-owner").value = a.owner || "";
+          document.getElementById("edit-age").value = a.age || "";
+          document.getElementById("edit-weight").value = a.weight || "";
+          document.getElementById("edit-location").value = a.location || "";
+          document.getElementById("edit-vaccination").value =
+            a.vaccination || "";
+          document.getElementById("edit-health").value = a.health || "";
+          document.getElementById("edit-next-checkup").value =
+            a.next_checkup || "";
+          document.getElementById("edit-notes").value = a.notes || "";
+          document.getElementById("edit-medical-history").value = Array.isArray(
+            a.medical_history,
+          )
+            ? a.medical_history.join(", ")
+            : a.medical_history || "";
+
+          document.getElementById("edit-modal").classList.add("open");
+        } catch (err) {
+          showToast("Could not load animal data", "error");
+        }
+      }
+
+      function closeEditModal() {
+        document.getElementById("edit-modal").classList.remove("open");
+      }
+
+      async function saveEdit() {
+        const payload = {
+          tag_id: document.getElementById("edit-tag-id").value,
+          name: document.getElementById("edit-name").value,
+          species: document.getElementById("edit-species").value,
+          owner: document.getElementById("edit-owner").value,
+          age: document.getElementById("edit-age").value,
+          weight: document.getElementById("edit-weight").value,
+          location: document.getElementById("edit-location").value,
+          vaccination: document.getElementById("edit-vaccination").value,
+          health: document.getElementById("edit-health").value,
+          next_checkup: document.getElementById("edit-next-checkup").value,
+          notes: document.getElementById("edit-notes").value,
+          medical_history: document.getElementById("edit-medical-history")
+            .value,
+        };
+
+        try {
+          const res = await fetch("/admin/edit_animal", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          const data = await res.json();
+          if (data.status === "success") {
+            showToast("Record updated!", "success");
+            closeEditModal();
+            setTimeout(() => location.reload(), 1200);
+          } else {
+            showToast(data.message, "error");
+          }
+        } catch (err) {
+          showToast("Update failed", "error");
+        }
+      }
+
+      // ── Delete ──
+      async function deleteAnimal(tagId, name) {
+        if (
+          !confirm(
+            `Delete record for "${name}" (${tagId})? This cannot be undone.`,
+          )
+        )
+          return;
+        try {
+          const res = await fetch("/admin/delete_animal", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ tag_id: tagId }),
+          });
+          const data = await res.json();
+          if (data.status === "success") {
+            showToast("Animal deleted.", "success");
+            setTimeout(() => location.reload(), 1000);
+          } else {
+            showToast(data.message, "error");
+          }
+        } catch (err) {
+          showToast("Delete failed", "error");
+        }
+      }
+
+      // ── Chat ──
+      async function sendChat() {
+        const input = document.getElementById("chat-input");
+        const msg = input.value.trim();
+        if (!msg) return;
+        input.value = "";
+
+        appendMessage(msg, "user");
+        const thinking = appendMessage("...", "bot");
+
+        try {
+          const res = await fetch("/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: msg }),
+          });
+          const data = await res.json();
+          thinking.querySelector(".msg-bubble").textContent =
+            data.reply || "No response.";
+        } catch (e) {
+          thinking.querySelector(".msg-bubble").textContent =
+            "Error: " + e.message;
+        }
+      }
+
+      function appendMessage(text, role) {
+        const box = document.getElementById("chat-messages");
+        const div = document.createElement("div");
+        div.className = "msg msg-" + role;
+        div.innerHTML = `<div class="msg-bubble">${text}</div>`;
+        box.appendChild(div);
+        box.scrollTop = box.scrollHeight;
+        return div;
+      }
+
+      document
+        .getElementById("edit-modal")
+        .addEventListener("click", function (e) {
+          if (e.target === this) closeEditModal();
+        });
+    </script>
+  </body>
+</html>
