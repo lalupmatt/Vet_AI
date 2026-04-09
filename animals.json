@@ -1,0 +1,145 @@
+[
+  {
+    "tag_id": "COW-001",
+    "name": "Gauri",
+    "species": "Cow",
+    "owner": "Ramesh",
+    "age": "5 years",
+    "weight": "450 kg",
+    "location": "Mysore",
+    "vaccination": "Due in 5 days",
+    "health": "Healthy",
+    "next_checkup": "2026-04-20",
+    "medical_history": [
+      "Fever treated (Jan 2025)",
+      "Deworming completed (Feb 2025)"
+    ],
+    "notes": "Good milk production",
+    "image": "cow1.jpg"
+  },
+  {
+    "tag_id": "COW-002",
+    "name": "Lakshmi",
+    "species": "Cow",
+    "owner": "Suresh",
+    "age": "6 years",
+    "weight": "480 kg",
+    "location": "Mandya",
+    "vaccination": "Completed",
+    "health": "Healthy",
+    "next_checkup": "2026-05-01",
+    "medical_history": [
+      "Routine checkup (Mar 2025)",
+      "Vaccination completed (Feb 2025)"
+    ],
+    "notes": "Strong and active",
+    "image": "cow2.jpg"
+  },
+  {
+    "tag_id": "DOG-001",
+    "name": "Rocky",
+    "species": "Dog",
+    "owner": "Sita",
+    "age": "3 years",
+    "weight": "20 kg",
+    "location": "Bangalore",
+    "vaccination": "Completed",
+    "health": "Minor infection risk",
+    "next_checkup": "2026-04-15",
+    "medical_history": [
+      "Skin infection treated (Dec 2024)",
+      "Vaccinated for rabies (Jan 2025)"
+    ],
+    "notes": "Needs regular grooming",
+    "image": "dog1.jpg"
+  },
+  {
+    "tag_id": "GOAT-001",
+    "name": "Chinnu",
+    "species": "Goat",
+    "owner": "Priya",
+    "age": "2 years",
+    "weight": "35 kg",
+    "location": "Hassan",
+    "vaccination": "Due in 10 days",
+    "health": "Healthy",
+    "next_checkup": "2026-04-25",
+    "medical_history": [
+      "Deworming completed (Jan 2025)",
+      "Routine checkup (Feb 2025)"
+    ],
+    "notes": "Active and healthy",
+    "image": "goat1.jpg"
+  },
+  {
+    "tag_id": "GOAT-002",
+    "name": "Bittu",
+    "species": "Goat",
+    "owner": "Kiran",
+    "age": "1.5 years",
+    "weight": "30 kg",
+    "location": "Tumkur",
+    "vaccination": "Due in 7 days",
+    "health": "Healthy",
+    "next_checkup": "2026-04-18",
+    "medical_history": [
+      "Routine checkup (Jan 2025)",
+      "Minor fever treated (Feb 2025)"
+    ],
+    "notes": "Needs balanced diet",
+    "image": "goat2.jpg"
+  },
+  {
+    "tag_id": "HORSE-001",
+    "name": "Raja",
+    "species": "Horse",
+    "owner": "Arjun",
+    "age": "7 years",
+    "weight": "500 kg",
+    "location": "Mysore",
+    "vaccination": "Completed",
+    "health": "Healthy",
+    "next_checkup": "2026-05-10",
+    "medical_history": [
+      "Leg injury treated (2024)",
+      "Vaccination completed (Feb 2025)"
+    ],
+    "notes": "Used for riding",
+    "image": "horse1.jpg"
+  },
+  {
+    "tag_id": "CAT-001",
+    "name": "Milo",
+    "species": "Cat",
+    "owner": "Anjali",
+    "age": "2 years",
+    "weight": "4 kg",
+    "location": "Bangalore",
+    "vaccination": "Completed",
+    "health": "Healthy",
+    "next_checkup": "2026-04-22",
+    "medical_history": [
+      "Vaccinated (Jan 2025)",
+      "Minor cold treated (Feb 2025)"
+    ],
+    "notes": "Indoor cat",
+    "image": "cat1.jpg"
+  },
+  {
+    "tag_id": "COW-003",
+    "name": "pooja",
+    "species": "Cow",
+    "owner": "likitha",
+    "age": "4",
+    "weight": "250",
+    "location": "mandya",
+    "vaccination": "Not done",
+    "health": "Healthy",
+    "next_checkup": "2026-05-27",
+    "medical_history": [
+      "the cow was healthy and gives good milk and it is strong"
+    ],
+    "notes": "it is good ",
+    "image": "istockphoto-1363453293-612x612.jpg"
+  }
+]

@@ -1,0 +1,26 @@
+version: '3.9'
+
+services:
+  vet-ai:
+    build: .
+    container_name: vet-ai-app
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+      - FLASK_DEBUG=False
+      - OPENROUTER_API_KEY=${OPENROUTER_API_KEY}
+      - SECRET_KEY=${SECRET_KEY:-change-me-in-production}
+    volumes:
+      - ./static/uploads:/app/static/uploads
+      - ./static/temp_uploads:/app/static/temp_uploads
+      - ./dataset:/app/dataset
+      - ./animals.json:/app/animals.json
+      - ./users.json:/app/users.json
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/login"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s

@@ -1,0 +1,957 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VetAI — Dashboard</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Crimson+Text:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      *,
+      *::before,
+      *::after {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+      }
+
+      :root {
+        --green-dark: #1a4731;
+        --green-mid: #2d6a4f;
+        --green-light: #52b788;
+        --amber: #e09f3e;
+        --cream: #f7f3ee;
+        --cream-dark: #ede7de;
+        --white: #ffffff;
+        --text-dark: #1c1c1c;
+        --text-muted: #6b7280;
+        --sidebar-w: 230px;
+      }
+
+      body {
+        font-family: "DM Sans", sans-serif;
+        background: var(--cream);
+        color: var(--text-dark);
+        min-height: 100vh;
+        display: flex;
+      }
+
+      /* ── Sidebar ── */
+      .sidebar {
+        width: var(--sidebar-w);
+        background: var(--green-dark);
+        display: flex;
+        flex-direction: column;
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100vh;
+        z-index: 100;
+      }
+
+      .sidebar-brand {
+        padding: 24px 24px 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+      .sidebar-brand .logo {
+        font-size: 24px;
+      }
+      .sidebar-brand .brand-text {
+        font-family: "Crimson Text", serif;
+        color: #fff;
+        font-size: 22px;
+        font-weight: 600;
+      }
+
+      .sidebar-nav {
+        flex: 1;
+        padding: 20px 0;
+      }
+
+      .nav-section-label {
+        padding: 10px 24px 6px;
+        font-size: 10px;
+        font-weight: 600;
+        letter-spacing: 1px;
+        color: rgba(255, 255, 255, 0.35);
+        text-transform: uppercase;
+      }
+
+      .nav-item {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 11px 24px;
+        color: rgba(255, 255, 255, 0.7);
+        cursor: pointer;
+        font-size: 14px;
+        transition: all 0.15s;
+        border-left: 3px solid transparent;
+      }
+      .nav-item:hover {
+        background: rgba(255, 255, 255, 0.06);
+        color: #fff;
+      }
+      .nav-item.active {
+        background: rgba(255, 255, 255, 0.1);
+        color: #fff;
+        border-left-color: var(--green-light);
+      }
+      .nav-item .nav-icon {
+        font-size: 16px;
+        width: 20px;
+        text-align: center;
+      }
+
+      .readonly-notice {
+        margin: 12px 16px;
+        padding: 10px 14px;
+        background: rgba(255, 255, 255, 0.07);
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.55);
+        font-size: 12px;
+        line-height: 1.5;
+      }
+      .readonly-notice strong {
+        color: rgba(255, 255, 255, 0.8);
+      }
+
+      .sidebar-footer {
+        padding: 16px 24px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+      }
+
+      .user-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 12px;
+      }
+      .user-avatar {
+        width: 34px;
+        height: 34px;
+        background: var(--green-light);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 14px;
+        font-weight: 700;
+        color: var(--white);
+      }
+      .user-details .user-name {
+        color: #fff;
+        font-size: 13px;
+        font-weight: 500;
+      }
+      .user-details .role-tag {
+        display: inline-block;
+        background: var(--green-light);
+        color: var(--green-dark);
+        font-size: 10px;
+        font-weight: 700;
+        padding: 1px 7px;
+        border-radius: 20px;
+        margin-top: 2px;
+      }
+
+      .btn-logout {
+        width: 100%;
+        padding: 9px;
+        background: rgba(255, 255, 255, 0.08);
+        color: rgba(255, 255, 255, 0.7);
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        border-radius: 8px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13px;
+        cursor: pointer;
+        transition: all 0.15s;
+      }
+      .btn-logout:hover {
+        background: rgba(255, 255, 255, 0.15);
+        color: #fff;
+      }
+
+      /* ── Main ── */
+      .main {
+        margin-left: var(--sidebar-w);
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+      }
+
+      .topbar {
+        background: var(--white);
+        padding: 16px 32px;
+        border-bottom: 1px solid var(--cream-dark);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .topbar-title {
+        font-family: "Crimson Text", serif;
+        font-size: 22px;
+        font-weight: 600;
+      }
+      .topbar-badge {
+        background: #d4edda;
+        color: #155724;
+        font-size: 12px;
+        font-weight: 600;
+        padding: 4px 12px;
+        border-radius: 20px;
+      }
+
+      .content {
+        padding: 28px 32px;
+        flex: 1;
+      }
+
+      /* ── Tabs ── */
+      .tabs {
+        display: flex;
+        gap: 6px;
+        margin-bottom: 24px;
+        background: var(--white);
+        padding: 6px;
+        border-radius: 12px;
+        width: fit-content;
+        border: 1px solid var(--cream-dark);
+      }
+      .tab {
+        padding: 9px 20px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 14px;
+        font-weight: 500;
+        color: var(--text-muted);
+        transition: all 0.15s;
+        border: none;
+        background: none;
+        font-family: "DM Sans", sans-serif;
+      }
+      .tab:hover {
+        color: var(--text-dark);
+      }
+      .tab.active {
+        background: var(--green-dark);
+        color: #fff;
+      }
+
+      .tab-panel {
+        display: none;
+      }
+      .tab-panel.active {
+        display: block;
+      }
+
+      /* ── Scan Layout ── */
+      .scan-layout {
+        display: grid;
+        grid-template-columns: 1fr 1.3fr;
+        gap: 20px;
+      }
+
+      .upload-zone {
+        border: 2px dashed var(--cream-dark);
+        border-radius: 14px;
+        padding: 40px 24px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.2s;
+        background: var(--white);
+      }
+      .upload-zone:hover {
+        border-color: var(--green-light);
+        background: #f0fdf4;
+      }
+      .upload-zone .upload-icon {
+        font-size: 40px;
+        margin-bottom: 12px;
+      }
+      .upload-zone p {
+        color: var(--text-muted);
+        font-size: 14px;
+        line-height: 1.6;
+      }
+      .upload-zone p strong {
+        color: var(--green-dark);
+      }
+
+      #scan-file-input {
+        display: none;
+      }
+
+      .temp-notice {
+        background: #fff8e7;
+        border: 1px solid #f0d060;
+        border-radius: 9px;
+        padding: 10px 14px;
+        font-size: 12.5px;
+        color: #856404;
+        margin-top: 12px;
+        text-align: left;
+      }
+
+      .preview-img {
+        max-width: 100%;
+        max-height: 180px;
+        border-radius: 10px;
+        object-fit: cover;
+        margin-top: 12px;
+      }
+
+      .btn-scan {
+        width: 100%;
+        padding: 13px;
+        background: var(--green-dark);
+        color: #fff;
+        border: none;
+        border-radius: 10px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 15px;
+        font-weight: 500;
+        cursor: pointer;
+        margin-top: 14px;
+        transition: background 0.15s;
+      }
+      .btn-scan:hover {
+        background: var(--green-mid);
+      }
+      .btn-scan:disabled {
+        background: #aaa;
+        cursor: not-allowed;
+      }
+
+      /* ── Result Panel ── */
+      .result-panel {
+        background: var(--white);
+        border-radius: 14px;
+        border: 1px solid var(--cream-dark);
+        padding: 24px;
+      }
+
+      .placeholder-msg {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: 220px;
+        color: var(--text-muted);
+        text-align: center;
+        gap: 12px;
+      }
+      .placeholder-msg .ph-icon {
+        font-size: 44px;
+        opacity: 0.35;
+      }
+
+      .result-header {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        margin-bottom: 18px;
+      }
+      .result-name {
+        font-family: "Crimson Text", serif;
+        font-size: 28px;
+        font-weight: 600;
+      }
+      .result-species {
+        color: var(--text-muted);
+        font-size: 13px;
+        margin-top: 3px;
+      }
+
+      .score-ring {
+        text-align: center;
+        min-width: 72px;
+      }
+      .score-num {
+        font-size: 30px;
+        font-weight: 700;
+        color: var(--green-dark);
+        font-family: "Crimson Text", serif;
+      }
+      .score-label {
+        font-size: 10px;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+
+      .detail-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-bottom: 18px;
+      }
+      .detail-item {
+        background: var(--cream);
+        border-radius: 8px;
+        padding: 10px 14px;
+      }
+      .detail-label {
+        font-size: 10px;
+        color: var(--text-muted);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        font-weight: 600;
+      }
+      .detail-value {
+        font-size: 13.5px;
+        font-weight: 500;
+        margin-top: 3px;
+      }
+
+      .section-label {
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 0.8px;
+        color: var(--green-dark);
+        margin: 14px 0 8px;
+      }
+
+      .diagnosis-box {
+        background: #f0fdf4;
+        border: 1px solid #a7d9b5;
+        border-radius: 10px;
+        padding: 14px 16px;
+        font-size: 13px;
+        line-height: 1.6;
+        color: var(--text-dark);
+        white-space: pre-wrap;
+        max-height: 180px;
+        overflow-y: auto;
+      }
+
+      .tips-list {
+        list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        margin-top: 4px;
+      }
+      .tips-list li {
+        background: var(--cream);
+        padding: 8px 14px;
+        border-radius: 8px;
+        font-size: 13px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+      .tips-list li::before {
+        content: "✓";
+        color: var(--green-light);
+        font-weight: 700;
+      }
+
+      /* ── Chat ── */
+      .chat-box {
+        background: var(--white);
+        border: 1px solid var(--cream-dark);
+        border-radius: 14px;
+        overflow: hidden;
+      }
+      .card-header {
+        padding: 18px 24px;
+        border-bottom: 1px solid var(--cream-dark);
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+      }
+      .card-title {
+        font-size: 15px;
+        font-weight: 600;
+      }
+
+      .chat-messages {
+        height: 360px;
+        overflow-y: auto;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .msg {
+        max-width: 80%;
+      }
+      .msg-user {
+        align-self: flex-end;
+      }
+      .msg-bot {
+        align-self: flex-start;
+      }
+
+      .msg-bubble {
+        padding: 10px 16px;
+        border-radius: 14px;
+        font-size: 13.5px;
+        line-height: 1.55;
+        white-space: pre-wrap;
+      }
+      .msg-user .msg-bubble {
+        background: var(--green-dark);
+        color: #fff;
+        border-bottom-right-radius: 4px;
+      }
+      .msg-bot .msg-bubble {
+        background: var(--cream);
+        color: var(--text-dark);
+        border-bottom-left-radius: 4px;
+      }
+
+      .chat-input-row {
+        display: flex;
+        gap: 10px;
+        padding: 14px 16px;
+        border-top: 1px solid var(--cream-dark);
+      }
+      .chat-input-row input {
+        flex: 1;
+        padding: 11px 14px;
+        border: 1.5px solid var(--cream-dark);
+        border-radius: 9px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 13.5px;
+        outline: none;
+      }
+      .chat-input-row input:focus {
+        border-color: var(--green-mid);
+      }
+
+      .btn-send {
+        padding: 11px 20px;
+        background: var(--green-dark);
+        color: #fff;
+        border: none;
+        border-radius: 9px;
+        font-family: "DM Sans", sans-serif;
+        font-size: 14px;
+        cursor: pointer;
+        transition: background 0.15s;
+      }
+      .btn-send:hover {
+        background: var(--green-mid);
+      }
+
+      /* ── Spinner ── */
+      .spinner {
+        display: none;
+        width: 20px;
+        height: 20px;
+        border: 3px solid rgba(255, 255, 255, 0.3);
+        border-top-color: #fff;
+        border-radius: 50%;
+        animation: spin 0.7s linear infinite;
+        margin: 0 auto;
+      }
+      @keyframes spin {
+        to {
+          transform: rotate(360deg);
+        }
+      }
+
+      /* ── Toast ── */
+      #toast {
+        position: fixed;
+        bottom: 24px;
+        right: 24px;
+        padding: 14px 20px;
+        border-radius: 10px;
+        font-size: 14px;
+        font-weight: 500;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        z-index: 9999;
+        transform: translateY(60px);
+        opacity: 0;
+        transition: all 0.3s;
+      }
+      #toast.show {
+        transform: translateY(0);
+        opacity: 1;
+      }
+      #toast.success {
+        background: var(--green-dark);
+        color: #fff;
+      }
+      #toast.error {
+        background: #c0392b;
+        color: #fff;
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ── Sidebar ── -->
+    <aside class="sidebar">
+      <div class="sidebar-brand">
+        <span class="logo">🐾</span>
+        <span class="brand-text">VetAI</span>
+      </div>
+
+      <nav class="sidebar-nav">
+        <div class="nav-section-label">Tools</div>
+        <div class="nav-item active" onclick="switchTab('scan')">
+          <span class="nav-icon">🔍</span> Scan Animal
+        </div>
+        <div class="nav-item" onclick="switchTab('chat')">
+          <span class="nav-icon">💬</span> AI Chat
+        </div>
+      </nav>
+
+      <div class="readonly-notice">
+        <strong>Read-only mode</strong><br />
+        You can scan animals and get AI insights. Contact an admin to update
+        records.
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="user-info">
+          <div class="user-avatar">{{ user.name[0] | upper }}</div>
+          <div class="user-details">
+            <div class="user-name">{{ user.name }}</div>
+            <span class="role-tag">USER</span>
+          </div>
+        </div>
+        <button class="btn-logout" onclick="location.href = '/logout'">
+          Sign Out
+        </button>
+      </div>
+    </aside>
+
+    <!-- ── Main ── -->
+    <main class="main">
+      <div class="topbar">
+        <span class="topbar-title" id="page-title">Scan Animal</span>
+        <span class="topbar-badge">🔒 View Only</span>
+      </div>
+
+      <div class="content">
+        <div class="tabs">
+          <button class="tab active" id="tab-scan" onclick="switchTab('scan')">
+            🔍 Scan Animal
+          </button>
+          <button class="tab" id="tab-chat" onclick="switchTab('chat')">
+            💬 AI Chat
+          </button>
+        </div>
+
+        <!-- ════ TAB: SCAN ════ -->
+        <div class="tab-panel active" id="panel-scan">
+          <div class="scan-layout">
+            <!-- Upload -->
+            <div>
+              <div
+                class="upload-zone"
+                id="drop-zone"
+                onclick="document.getElementById('scan-file-input').click()"
+              >
+                <div class="upload-icon">📷</div>
+                <p><strong>Click to upload</strong> an animal photo</p>
+                <p>PNG, JPG, JPEG, WEBP</p>
+                <img
+                  id="scan-preview"
+                  class="preview-img"
+                  style="display: none"
+                />
+              </div>
+              <input
+                type="file"
+                id="scan-file-input"
+                accept=".png,.jpg,.jpeg,.bmp,.webp"
+                onchange="previewScan(this)"
+              />
+
+              <div class="temp-notice">
+                ℹ️ <strong>Temporary scan</strong> — Your photo is not saved
+                permanently. Only AI insights are shown.
+              </div>
+
+              <button
+                class="btn-scan"
+                id="btn-scan"
+                onclick="doScan()"
+                disabled
+              >
+                <span id="scan-btn-text">🔍 Scan &amp; Get AI Insights</span>
+                <div class="spinner" id="scan-spinner"></div>
+              </button>
+            </div>
+
+            <!-- Result -->
+            <div class="result-panel">
+              <div class="placeholder-msg" id="scan-placeholder">
+                <div class="ph-icon">🐄</div>
+                <p>Upload an animal photo to<br />receive AI health insights</p>
+              </div>
+
+              <div id="scan-result" style="display: none">
+                <div class="result-header">
+                  <div>
+                    <div class="result-name" id="r-name">—</div>
+                    <div class="result-species" id="r-species">—</div>
+                  </div>
+                  <div class="score-ring">
+                    <div class="score-num" id="r-score">—</div>
+                    <div class="score-label">Health Score</div>
+                  </div>
+                </div>
+
+                <div class="detail-grid">
+                  <div class="detail-item">
+                    <div class="detail-label">Species</div>
+                    <div class="detail-value" id="r-species2">—</div>
+                  </div>
+                  <div class="detail-item">
+                    <div class="detail-label">Owner</div>
+                    <div class="detail-value" id="r-owner">—</div>
+                  </div>
+                  <div class="detail-item">
+                    <div class="detail-label">Age</div>
+                    <div class="detail-value" id="r-age">—</div>
+                  </div>
+                  <div class="detail-item">
+                    <div class="detail-label">Vaccination</div>
+                    <div class="detail-value" id="r-vacc">—</div>
+                  </div>
+                  <div class="detail-item">
+                    <div class="detail-label">Status</div>
+                    <div class="detail-value" id="r-status">—</div>
+                  </div>
+                  <div class="detail-item">
+                    <div class="detail-label">Next Checkup</div>
+                    <div class="detail-value" id="r-checkup">—</div>
+                  </div>
+                </div>
+
+                <div class="section-label">AI Diagnosis</div>
+                <div class="diagnosis-box" id="r-diagnosis">—</div>
+
+                <div class="section-label">Care Tips</div>
+                <ul class="tips-list" id="r-tips"></ul>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════ TAB: CHAT ════ -->
+        <div class="tab-panel" id="panel-chat">
+          <div class="chat-box">
+            <div class="card-header">
+              <span class="card-title">🤖 VetAI Assistant</span>
+              <span style="font-size: 12px; color: var(--text-muted)"
+                >Powered by LLaMA 3</span
+              >
+            </div>
+            <div class="chat-messages" id="chat-messages">
+              <div class="msg msg-bot">
+                <div class="msg-bubble">
+                  Hello {{ user.name }}! 👋 I'm your veterinary assistant. Ask
+                  me anything about your animals — symptoms, feeding,
+                  vaccination, or general health tips.
+                </div>
+              </div>
+            </div>
+            <div class="chat-input-row">
+              <input
+                type="text"
+                id="chat-input"
+                placeholder="Ask about animal health, symptoms, treatments..."
+                onkeydown="if (event.key === 'Enter') sendChat();"
+              />
+              <button class="btn-send" onclick="sendChat()">Send</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <div id="toast"></div>
+
+    <script>
+      // ── Tabs ──
+      const titles = { scan: "Scan Animal", chat: "AI Chat" };
+
+      function switchTab(name) {
+        document
+          .querySelectorAll(".tab-panel")
+          .forEach((p) => p.classList.remove("active"));
+        document
+          .querySelectorAll(".tab")
+          .forEach((t) => t.classList.remove("active"));
+        document
+          .querySelectorAll(".nav-item")
+          .forEach((n) => n.classList.remove("active"));
+        document.getElementById("panel-" + name).classList.add("active");
+        document.getElementById("tab-" + name).classList.add("active");
+        document.getElementById("page-title").textContent = titles[name];
+        document.querySelectorAll(".nav-item").forEach((n) => {
+          if (
+            n.getAttribute("onclick") &&
+            n.getAttribute("onclick").includes(name)
+          )
+            n.classList.add("active");
+        });
+      }
+
+      // ── Toast ──
+      function showToast(msg, type = "success") {
+        const t = document.getElementById("toast");
+        t.textContent = msg;
+        t.className = "show " + type;
+        setTimeout(() => {
+          t.className = "";
+        }, 3200);
+      }
+
+      // ── Scan ──
+      let scanFile = null;
+
+      function previewScan(input) {
+        const file = input.files[0];
+        if (!file) return;
+        scanFile = file;
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = document.getElementById("scan-preview");
+          img.src = e.target.result;
+          img.style.display = "block";
+        };
+        reader.readAsDataURL(file);
+        document.getElementById("btn-scan").disabled = false;
+      }
+
+      async function doScan() {
+        if (!scanFile) return;
+        const btn = document.getElementById("btn-scan");
+        const spinner = document.getElementById("scan-spinner");
+        const btnText = document.getElementById("scan-btn-text");
+
+        btn.disabled = true;
+        btnText.style.display = "none";
+        spinner.style.display = "block";
+
+        const fd = new FormData();
+        fd.append("file", scanFile);
+
+        try {
+          const res = await fetch("/user/scan", { method: "POST", body: fd });
+          const data = await res.json();
+
+          if (data.error) {
+            showToast(data.error, "error");
+          } else {
+            renderResult(data);
+          }
+        } catch (e) {
+          showToast("Scan error: " + e.message, "error");
+        } finally {
+          btn.disabled = false;
+          btnText.style.display = "inline";
+          spinner.style.display = "none";
+        }
+      }
+
+      function renderResult(data) {
+        document.getElementById("scan-placeholder").style.display = "none";
+        document.getElementById("scan-result").style.display = "block";
+
+        const a = data.animal;
+        const r = data.report;
+
+        document.getElementById("r-name").textContent = a.name || "—";
+        document.getElementById("r-species").textContent =
+          (a.species || "") + " · " + (a.location || "");
+        document.getElementById("r-species2").textContent = a.species || "—";
+        document.getElementById("r-owner").textContent = a.owner || "—";
+        document.getElementById("r-age").textContent = a.age || "—";
+        document.getElementById("r-vacc").textContent = a.vaccination || "—";
+        document.getElementById("r-status").textContent = r.status_badge || "—";
+        document.getElementById("r-checkup").textContent =
+          a.next_checkup || "—";
+        document.getElementById("r-score").textContent = r.health_score || "—";
+        document.getElementById("r-diagnosis").textContent =
+          data.diagnosis || "—";
+
+        const tipsList = document.getElementById("r-tips");
+        tipsList.innerHTML = "";
+        (r.action_items || []).forEach((tip) => {
+          const li = document.createElement("li");
+          li.textContent = tip;
+          tipsList.appendChild(li);
+        });
+      }
+
+      // Drag-and-drop
+      const dz = document.getElementById("drop-zone");
+      dz.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        dz.style.borderColor = "var(--green-light)";
+      });
+      dz.addEventListener("dragleave", () => {
+        dz.style.borderColor = "";
+      });
+      dz.addEventListener("drop", (e) => {
+        e.preventDefault();
+        dz.style.borderColor = "";
+        const file = e.dataTransfer.files[0];
+        if (file) {
+          scanFile = file;
+          const reader = new FileReader();
+          reader.onload = (ev) => {
+            const img = document.getElementById("scan-preview");
+            img.src = ev.target.result;
+            img.style.display = "block";
+          };
+          reader.readAsDataURL(file);
+          document.getElementById("btn-scan").disabled = false;
+        }
+      });
+
+      // ── Chat ──
+      async function sendChat() {
+        const input = document.getElementById("chat-input");
+        const msg = input.value.trim();
+        if (!msg) return;
+        input.value = "";
+
+        appendMessage(msg, "user");
+        const thinkingEl = appendMessage("Thinking...", "bot");
+
+        try {
+          const res = await fetch("/chat", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ message: msg }),
+          });
+          const data = await res.json();
+          thinkingEl.querySelector(".msg-bubble").textContent =
+            data.reply || "No response.";
+        } catch (e) {
+          thinkingEl.querySelector(".msg-bubble").textContent =
+            "Error: " + e.message;
+        }
+      }
+
+      function appendMessage(text, role) {
+        const box = document.getElementById("chat-messages");
+        const div = document.createElement("div");
+        div.className = "msg msg-" + role;
+        div.innerHTML = `<div class="msg-bubble">${text}</div>`;
+        box.appendChild(div);
+        box.scrollTop = box.scrollHeight;
+        return div;
+      }
+    </script>
+  </body>
+</html>
