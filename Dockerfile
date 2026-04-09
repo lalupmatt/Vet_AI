@@ -1,6 +1,6 @@
 # Multi-stage build for Vet AI Flask app
 FROM python:3.11-slim
-RUN apt-get update && apt-get install -y libgl1-mesa-glx libglib2.0-0
+RUN apt-get update && apt-get install -y libgl1 libglib2.0-0
 # Install system dependencies
 RUN apt-get update && apt-get install -y \
     libsm6 libxext6 libxrender-dev libgomp1 \
